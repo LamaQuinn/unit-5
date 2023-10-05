@@ -11,12 +11,16 @@ import {
   deleteDisplayCountry,
 } from "../redux/slices/displayCountrySlice";
 
+import { setLoading } from "../redux/slices/loadingSlice";
+
 const Header = () => {
   const dispatch = useDispatch();
   const [input, setInput] = useState();
   const currentDisplay = useSelector(selectDisplay);
-  
+
   const handleSearch = () => {
+    dispatch(setLoading(true));
+
     axios
       .get(`https://restcountries.com/v3.1/name/${input}`)
       .then((res) => {
@@ -27,8 +31,12 @@ const Header = () => {
       })
       .catch((err) => {
         alert("No countries found that match your search!");
+      })
+      .finally(() => {
+        dispatch(setLoading(false));
       });
   };
+
   return (
     <div className="header">
       <div className="home">
